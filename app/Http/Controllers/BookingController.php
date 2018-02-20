@@ -68,6 +68,7 @@ class BookingController extends Controller
         $billing = new Billing();
         $billing->booking_id = $booking->id;
         $billing->downpayment = $request->downpayment;
+        $billing->totalcharges = $request->bookingcharge;
 
         $billing->save();
 
@@ -113,6 +114,7 @@ class BookingController extends Controller
         $billing = new Billing();
         $billing->booking_id = $reservation->id;
         $billing->downpayment = $request->downpayment;
+        $billing->totalcharges = $request->bookingcharge;
 
         $billing->save();
 

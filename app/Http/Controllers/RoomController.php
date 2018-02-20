@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Room;
 use App\RoomRate;
+use App\StatusHistory;
+
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 
@@ -114,7 +117,51 @@ class RoomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'roomname' => 'required',
+            'roomdesc' => 'required',
+            'capacity' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+
+        $room = new Room();
+        $room->room_name = $request->roomname;
+        $room->room_description = $request->roomdesc;
+        $room->capacity = $request->capacity;
+
+        $room->save();
+
+        return response()->json([
+            'message' => 'Room information updated successfully.'
+        ]);
+    }
+
+    public function changeStatus(Request $request, $id)
+    {
+        $validator = \Validator::make($request->all(), [
+            'statusid' => 'required',
+            'roomid' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+
+        $roomstatus = new StatusHistory();
+
+        $roomstatus->status_id = $request->statusid;
+        $roomstatus->room_id = $request->roomid;
+        $roomstatus->statusdate = Carbon\Carbon::now();
+        $roomstatus->remarks = $request->remarks;
+
+        $roomstatus->save();
+
+        return response()->json([
+            'message' => 'Room status changed.'
+        ]);
     }
 
     /**
