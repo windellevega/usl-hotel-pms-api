@@ -18,8 +18,8 @@ class RoomsTableSeeder extends Seeder
         $rooms = [
             [
                 'room_name' => 'Room 201',
-                'room_description' => 'Single Room with Four Single Beds (good for four persons)',
-                'capacity' => 4,
+                'room_description' => 'Single Room with Four Single Beds',
+                'capacity' => 'Good for four persons',
                 'roomrates' => [
                     ['rate_id' => 1],
                     ['rate_id' => 6],
@@ -32,8 +32,8 @@ class RoomsTableSeeder extends Seeder
                 ],
             [
                 'room_name' => 'Room 202',
-                'room_description' => 'Single Room with One Twin/Double Bed(good for one to two persons)',
-                'capacity' => 2,
+                'room_description' => 'Single Room with One Twin/Double Bed',
+                'capacity' => 'Good for one to two persons',
                 'roomrates' => [
                     ['rate_id' => 2],
                     ['rate_id' => 6],
@@ -46,8 +46,8 @@ class RoomsTableSeeder extends Seeder
             ],
             [
                 'room_name' => 'Room 203',
-                'room_description' => 'Single Room with Two Twin/Double Beds (good for two to four persons)',
-                'capacity' => 4,
+                'room_description' => 'Single Room with Two Twin/Double Beds',
+                'capacity' => 'Good for two to four persons',
                 'roomrates' => [
                     ['rate_id' => 3],
                     ['rate_id' => 6],
@@ -60,8 +60,8 @@ class RoomsTableSeeder extends Seeder
             ],
             [
                 'room_name' => 'Room 301',
-                'room_description' => 'Dormitory Rooms with Four Bunk Beds (good for four to eight persons)',
-                'capacity' => 8,
+                'room_description' => 'Dormitory Rooms with Four Bunk Beds',
+                'capacity' => 'Good for four to eight persons',
                 'roomrates' => [
                     ['rate_id' => 4],
                     ['rate_id' => 6],
@@ -74,8 +74,8 @@ class RoomsTableSeeder extends Seeder
             ],
             [
                 'room_name' => 'Room 302',
-                'room_description' => 'Dormitory Rooms with Four Bunk Beds (good for four to eight persons)',
-                'capacity' => 8,
+                'room_description' => 'Dormitory Rooms with Four Bunk Beds',
+                'capacity' => 'Good for four to eight persons',
                 'roomrates' => [
                     ['rate_id' => 4],
                     ['rate_id' => 6],
@@ -89,7 +89,7 @@ class RoomsTableSeeder extends Seeder
             [
                 'room_name' => 'Room 303',
                 'room_description' => 'Single Room with One Double Bed and Fully Equipped Kitchennette',
-                'capacity' => 2,
+                'capacity' => 'Good for one to two persons',
                 'roomrates' => [
                     ['rate_id' => 5],
                     ['rate_id' => 6],
