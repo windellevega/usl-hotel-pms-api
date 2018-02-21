@@ -19,7 +19,21 @@ class RoomController extends Controller
      */
     public function index()
     {
-        //
+        $rooms = Room::with(['statushistories' => function($query) {
+                    $query->latest()->first();
+                }])->get();
+
+        if($rooms->count <= 0){
+            return response()->json([
+                'message' => 'No rooms to show'
+            ]);
+        }
+        
+        $rooms->load('RoomRate');
+        $rooms->load('RoomRate.Rate');
+        $rooms->load('StatusHistory.Status');
+
+        return response()->json($rooms);
     }
 
     /**

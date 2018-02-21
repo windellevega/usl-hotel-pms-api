@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Carbon\Carbon;
+
 use App\Booking;
 use App\Billing;
+use App\Room;
 
 class BookingController extends Controller
 {
@@ -14,9 +17,42 @@ class BookingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function showBookings()
     {
-        //
+        $bookings = Bookings::all()
+                    ->sortByDesc('checkin');
+        $bookings->load('Room');
+        $bookings->load('Guest');
+        $bookings->load('BookingType');
+        $bookings->load('User');
+
+        if($bookings->count() <= 0) {
+            return response()->json([
+                'message' => 'No bookings to display.'
+            ]);
+        }
+
+        return response()->json($bookings);
+    }
+
+    public function showReservations()
+    {
+        $reservations = Bookings::whereNotNull('reservationdate')
+                            ->where('checkin', '>=', Carbon::now())
+                            ->orderBy('checkin')
+                            ->get();
+        $reservations->load('Room');
+        $reservations->load('Guest');
+        $reservations->load('BookingType');
+        $reservations->load('User');
+
+        if($reservations->count() <= 0) {
+            return response()->json([
+                'message' => 'No reservations to display.'
+            ]);
+        }
+
+        return response()->json($reservations);
     }
 
     /**
@@ -132,7 +168,24 @@ class BookingController extends Controller
      */
     public function show($id)
     {
-        //
+        $booking = Booking::where('id', $id)
+                    ->get();
+        $booking->load('BookingType');
+        $booking->load('Room');
+        $booking->load('Billing');
+        $booking->load('Billing.OtherCharge');
+        $booking->load('Guest');
+        $booking->load('Guest.GuestType');
+        $booking->load('Guest.Company');
+
+        if($booking->count() != 0) {
+            return response()->json($booking);
+        }
+        else {
+            return response()->json([
+                'message' => "This booking doesn't exist"
+            ]);
+        }
     }
 
     /**
@@ -155,7 +208,7 @@ class BookingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //Todo!
     }
 
     /**

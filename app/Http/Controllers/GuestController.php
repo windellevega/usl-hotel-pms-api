@@ -17,7 +17,17 @@ class GuestController extends Controller
      */
     public function index()
     {
-        //
+        $guests = Guest::all();
+        $guests->load('GuestType');
+        $guests->load('Company');
+
+        if($guests->count() <= 0) {
+            return response()->json([
+                'message' => 'No guests found.'
+            ]);
+        }
+
+        return response()->json($guests);
     }
 
     /**
@@ -27,17 +37,7 @@ class GuestController extends Controller
      */
     public function create()
     {
-        $guests = Guest::all();
-        $guest->load('GuestType');
-        $guest->load('Company');
-
-        if($guest->count() <= 0) {
-            return response()->json([
-                'message' => 'No guests found.'
-            ]);
-        }
-
-        return response()->json($companies);
+        //
     }
 
     /**
@@ -85,6 +85,9 @@ class GuestController extends Controller
     {
         $guest = Guest::where('id', $id)
                         ->get();
+        $guest->load('GuestType');
+        $guest->load('Company');
+
         if($guest->count() <= 0) {
             return response()->json([
                 'message' => 'Guest not found.'
