@@ -52,7 +52,7 @@ class GuestController extends Controller
             'firstname' => 'required',
             'lastname' => 'required',
             'gtypeid' => 'required',
-            'contactno' => 'numeric|regex:/(09)[0-9]{9}',
+            'contactno' => 'numeric|regex:/(09)[0-9]{9}/',
             'companyid' => 'required'
         ]);
 
@@ -66,7 +66,7 @@ class GuestController extends Controller
         $guest->lastname = $request->lastname;
         $guest->guesttype_id = $request->gtypeid;
         $guest->contactno = $request->contactno;
-        $guest->company_id = $guest->companyid;
+        $guest->company_id = $request->companyid;
 
         $guest->save();
 
@@ -120,7 +120,7 @@ class GuestController extends Controller
             'firstname' => 'required',
             'lastname' => 'required',
             'gtypeid' => 'required',
-            'contactno' => 'numeric|regex:/(09)[0-9]{9}',
+            'contactno' => 'numeric|regex:/(09)[0-9]{9}/',
             'companyid' => 'required'
         ]);
 
@@ -135,12 +135,12 @@ class GuestController extends Controller
         $guest->lastname = $request->lastname;
         $guest->guesttype_id = $request->gtypeid;
         $guest->contactno = $request->contactno;
-        $guest->company_id = $guest->companyid;
+        $guest->company_id = $request->companyid;
 
         $guest->save();
 
         return response()->json([
-            'message' => 'Guest added successfully.'
+            'message' => 'Guest updated successfully.'
         ]);
     }
 

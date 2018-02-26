@@ -44,14 +44,14 @@ Route::get('/room/{id}', [
 
 //Update room information
 //@parameter: id - room id
-Route::patch('/room/update/{id}', [
+Route::patch('/room/{id}', [
     'as' => 'room-update',
     'uses' => 'RoomController@update'
 ]);
 
 //Change room status
 //@parameter: id = room id
-Route::patch('room/changestatus/{id}', [
+Route::post('room/changestatus/{id}', [
     'as' => 'room-changestatus',
     'uses' => 'RoomController@changeStatus'
 ]);
@@ -70,7 +70,7 @@ Route::get('/companies', [
 ]);
 
 //Add new company
-Route::post('/company/add', [
+Route::post('/company', [
     'as' => 'company-add',
     'uses' => 'CompanyController@store'
 ]);
@@ -82,9 +82,9 @@ Route::get('/company/{id}', [
 ]);
 
 //Update company information
-Route::patch('/company/update/{id}', [
+Route::patch('/company/{id}', [
     'as' => 'company-update',
-    'uses' => 'RoomController@update'
+    'uses' => 'CompanyController@update'
 ]);
 
 
@@ -115,7 +115,7 @@ Route::get('/guest/{id}', [
 
 //Update guest information
 //@parameter: id - guest id
-Route::patch('/guest/update/{id}', [
+Route::patch('/guest/{id}', [
     'as' => 'guest-update',
     'uses' => 'GuestController@update'
 ]);
@@ -140,13 +140,13 @@ Route::get('/reservations', [
 ]);
 
 //Add new booking
-Route::post('/booking/add', [
+Route::post('/booking', [
     'as' => 'booking-add',
     'uses' => 'BookingController@book'
 ]);
 
 //Add new reservation
-Route::post('/reservation/add', [
+Route::post('/reservation', [
     'as' => 'reservation-add',
     'uses' => 'BookingController@reserve'
 ]);
@@ -165,14 +165,14 @@ ROUTES FOR OTHER CHARGE METHODS
 */
 
 //Add new instance of other charge
-Route::post('/othercharge/add', [
+Route::post('/othercharge', [
     'as' => 'othercharge-add',
-    'uses' => 'OtherCharge@store'
+    'uses' => 'OtherChargeController@store'
 ]);
 
 //Delete instance of ther charge
-Route::delete('/othercharge/delete', [
+Route::delete('/othercharge/{id}', [
     'as' => 'othercharge-delete',
-    'uses' => 'OtherCharge@delete'
+    'uses' => 'OtherChargeController@destroy'
 ]);
 

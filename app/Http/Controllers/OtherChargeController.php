@@ -55,8 +55,7 @@ class OtherChargeController extends Controller
 
         $othercharge->save();
 
-        $billing = Billing::where('id', $request->billingid)
-                    ->get();
+        $billing = Billing::find($request->billingid);
 
         $billing->totalcharges += $request->cost;
 
@@ -109,14 +108,13 @@ class OtherChargeController extends Controller
      */
     public function destroy($id)
     {
-        $othercharge = OtherCharge::where('id', $id)
-                        ->get();
+        $othercharge = OtherCharge::find( $id);
         
-        $billing = Billing::where('id', $othercharge->billing_id);
+        $billing = Billing::find($othercharge->billing_id);
         $billing->totalcharges -= $othercharge->cost;
         $billing->save();
 
-        $othercharge->destroy();
+        $othercharge->delete();
 
         return response()->json([
             'message' => 'Other charge was removed'

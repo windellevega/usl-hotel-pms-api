@@ -19,11 +19,11 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $rooms = Room::with(['statushistories' => function($query) {
-                    $query->latest()->first();
+        $rooms = Room::with(['StatusHistory' => function($query) {
+                    $query->orderBy('id', 'DESC')->first();
                 }])->get();
 
-        if($rooms->count <= 0){
+        if($rooms->count() <= 0){
             return response()->json([
                 'message' => 'No rooms to show'
             ]);
@@ -75,14 +75,22 @@ class RoomController extends Controller
         $roomid = $room->id;
 
         foreach($request->rateids as $rateid) {
-            $roomrates = new RoomRate();
+            $roomrate = new RoomRate();
 
-            $roomrate->room_id = $room->id;
+            $roomrate->room_id = $roomid;
             $roomrate->rate_id = $rateid;
             $roomrate->active = 1;
 
             $roomrate->save();
         }
+
+        $statushistory = new StatusHistory();
+        $statushistory->status_id = 1;
+        $statushistory->room_id = $roomid;
+        $statushistory->statusdate = Carbon::now();
+        $statushistory->remarks = 'Newly added room';
+
+        $statushistory->save();
 
         return response()->json([
             'message' => 'Room added successfully.'
@@ -107,6 +115,9 @@ class RoomController extends Controller
         }
 
         $room->load('RoomRate');
+        $room->load('RoomRate.Rate');
+        $room->load('StatusHistory');
+        $room->load('StatusHistory.Status');
         return response()->json($room);
 
     }
@@ -131,20 +142,11 @@ class RoomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = \Validator::make($request->all(), [
-            'roomname' => 'required',
-            'roomdesc' => 'required',
-            'capacity' => 'required'
-        ]);
 
-        if($validator->fails()) {
-            return response()->json($validator->errors()->all());
-        }
-
-        $room = new Room();
-        $room->room_name = $request->roomname;
-        $room->room_description = $request->roomdesc;
-        $room->capacity = $request->capacity;
+        $room = Room::find($id);
+        $room->room_name = isset($request->roomname) ? $request->roomname : $room->room_name;
+        $room->room_description = isset($request->roomname) ? $request->roomdesc : $room->room_description;
+        $room->capacity = isset($request->capacity) ? $request->capacity : $room->capacity;
 
         $room->save();
 
@@ -156,8 +158,7 @@ class RoomController extends Controller
     public function changeStatus(Request $request, $id)
     {
         $validator = \Validator::make($request->all(), [
-            'statusid' => 'required',
-            'roomid' => 'required'
+            'statusid' => 'required'
         ]);
 
         if($validator->fails()) {
@@ -167,8 +168,8 @@ class RoomController extends Controller
         $roomstatus = new StatusHistory();
 
         $roomstatus->status_id = $request->statusid;
-        $roomstatus->room_id = $request->roomid;
-        $roomstatus->statusdate = Carbon\Carbon::now();
+        $roomstatus->room_id = $id;
+        $roomstatus->statusdate = Carbon::now();
         $roomstatus->remarks = $request->remarks;
 
         $roomstatus->save();

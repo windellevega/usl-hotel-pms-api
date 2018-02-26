@@ -31,7 +31,7 @@ class Booking extends Model
     **/
     public function BookingType()
     {
-        return $this->belongsTo('App\BookingType');
+        return $this->belongsTo('App\BookingType', 'bookingtype_id');
     }
 
     /**
@@ -47,6 +47,14 @@ class Booking extends Model
     **/
     public function User()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'booked_by');
+    }
+
+    /**
+     * Define relationship to guest
+     */
+    public function Guest()
+    {
+        return $this->belongsTo('App\Guest');
     }
 }

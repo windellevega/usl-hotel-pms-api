@@ -45,7 +45,7 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'name' => 'required | unique'
+            'name' => 'required|unique:companies,companyname'
         ]);
 
         if($validator->fails()) {
@@ -102,22 +102,21 @@ class CompanyController extends Controller
     public function update(Request $request, $id)
     {
         $validator = \Validator::make($request->all(), [
-            'name' => 'required | unique'
+            'name' => 'required|unique:companies,companyname'
         ]);
 
         if($validator->fails()) {
             return response()->json($validator->errors()->all());
         }
 
-        $company = Company::where('id', $id)
-                    ->first();
+        $company = Company::find($id);
 
         $company->companyname = $request->name;
 
         $company->save();
 
         return response()->json([
-            'message' => 'Company edited successfully.'
+            'message' => 'Company information updated successfully.'
         ]);
     }
 

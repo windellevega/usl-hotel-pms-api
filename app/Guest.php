@@ -21,7 +21,7 @@ class Guest extends Model
     **/
     public function GuestType()
     {
-        return $this->belongsTo('App\GuestType');
+        return $this->belongsTo('App\GuestType', 'guesttype_id');
     }
 
     /**
@@ -30,5 +30,13 @@ class Guest extends Model
     public function Company()
     {
         return $this->belongsTo('App\Company');
+    }
+
+    /**
+    * Define relationship to Booking
+    **/
+    public function Booking()
+    {
+        return $this->hasMany('App\Booking');
     }
 }

@@ -19,7 +19,7 @@ class BookingController extends Controller
      */
     public function showBookings()
     {
-        $bookings = Bookings::all()
+        $bookings = Booking::all()
                     ->sortByDesc('checkin');
         $bookings->load('Room');
         $bookings->load('Guest');
@@ -37,7 +37,7 @@ class BookingController extends Controller
 
     public function showReservations()
     {
-        $reservations = Bookings::whereNotNull('reservationdate')
+        $reservations = Booking::whereNotNull('reservationdate')
                             ->where('checkin', '>=', Carbon::now())
                             ->orderBy('checkin')
                             ->get();
@@ -94,8 +94,8 @@ class BookingController extends Controller
         $booking->numberofpax = $request->numpax;
         $booking->remarks = $request->remarks;
         $booking->guest_id = $request->guestid;
-        $booking->room_id = $request->room_id;
-        //$booking->booked_by = Auth::id();
+        $booking->room_id = $request->roomid;
+        $booking->booked_by = 1;//Auth::id();
         $booking->bookingtype_id = $request->bookingtypeid;
         $booking->bookingcharge = $request->bookingcharge;
 
@@ -140,8 +140,8 @@ class BookingController extends Controller
         $reservation->reservationstatus = 0;
         $reservation->reservationdate = $request->resdate;
         $reservation->guest_id = $request->guestid;
-        $reservation->room_id = $request->room_id;
-        //$reservation->booked_by = Auth::id();
+        $reservation->room_id = $request->roomid;
+        $reservation->booked_by = 1;//Auth::id();
         $reservation->bookingtype_id = $request->bookingtypeid;
         $reservation->bookingcharge = $request->bookingcharge;
 
