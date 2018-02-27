@@ -89,7 +89,7 @@ class BookingController extends Controller
 
         $booking = new Booking();
 
-        $booking->checkin = $request->checkin;
+        $booking->checkin = Carbon::now();
         $booking->checkout = $request->checkout;
         $booking->numberofpax = $request->numpax;
         $booking->remarks = $request->remarks;
