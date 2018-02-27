@@ -57,4 +57,20 @@ class Booking extends Model
     {
         return $this->belongsTo('App\Guest');
     }
+
+    /**
+     * Define accessor to format checkin attribute
+     */
+    public function getCheckinAttribute($value)
+    {
+        return date('M d, Y h:ia', strtotime($value));
+    }
+
+    /**
+     * Define accessor to format checkout attribute
+     */
+    public function getCheckoutAttribute($value)
+    {
+        return date('M d, Y h:ia', strtotime($value));
+    }
 }

@@ -36,6 +36,12 @@ class Room extends Model
     **/
     public function StatusHistory()
     {
-        return $this->hasMany('App\StatusHistory');
+        return $this->hasMany('App\StatusHistory')
+        ->orderBy('created_at', 'DESC');
+    }
+
+    public function LatestStatus()
+    {
+        return $this->StatusHistory()->take(1);
     }
 }

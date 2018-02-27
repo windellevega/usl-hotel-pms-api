@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Room;
 use App\RoomRate;
 use App\StatusHistory;
+use App\Booking;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 
@@ -19,9 +21,11 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $rooms = Room::with(['StatusHistory' => function($query) {
-                    $query->orderBy('id', 'DESC')->first();
-                }])->get();
+        $rooms = Room::all();
+        
+        //$rooms = Room::all();
+
+        $rooms->load('StatusHistory');
 
         if($rooms->count() <= 0){
             return response()->json([
@@ -29,8 +33,8 @@ class RoomController extends Controller
             ]);
         }
         
-        $rooms->load('RoomRate');
-        $rooms->load('RoomRate.Rate');
+        //$rooms->load('RoomRate');
+        //$rooms->load('RoomRate.Rate');
         $rooms->load('StatusHistory.Status');
 
         return response()->json($rooms);
@@ -120,6 +124,22 @@ class RoomController extends Controller
         $room->load('StatusHistory.Status');
         return response()->json($room);
 
+    }
+
+    public function showReservationDates($id)
+    {
+        $resdates = Booking::select('checkin', 'checkout')
+                    ->where('room_id', $id)
+                    ->where('checkin', '>', Carbon::now())
+                    ->get();
+
+        if($resdates->count() <= 0) {
+            return response()->json([
+                'message' => 'No reservations for this room.'
+            ]);
+        }
+
+        return response()->json($resdates);
     }
 
     /**

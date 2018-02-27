@@ -56,6 +56,13 @@ Route::post('room/changestatus/{id}', [
     'uses' => 'RoomController@changeStatus'
 ]);
 
+//Get room reservation dates
+//@parameter: id = room id
+Route::get('room/reservationdates/{id}', [
+    'as' => 'room-reservationdates',
+    'uses' => 'RoomController@showReservationDates'
+]);
+
 
 /*
 ----------------------------
