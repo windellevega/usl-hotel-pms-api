@@ -13,8 +13,9 @@ class Guest extends Model
      */
     protected $fillable = [
         'guesttype_id', 'company_id',
-        'firstname', 'lastname', 'contactno',
+        'firstname', 'lastname', 'contactno'
     ];
+    protected $appends = ['fullname'];
 
     /**
     * Define relationship to GuestType
@@ -38,5 +39,13 @@ class Guest extends Model
     public function Booking()
     {
         return $this->hasMany('App\Booking');
+    }
+
+    /**
+     * Define accessor to fullname
+     */
+    public function getFullnameAttribute()
+    {
+        return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
     }
 }
