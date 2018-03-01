@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 use App\Booking;
+use App\BookingType;
 use App\Billing;
 use App\Room;
 
@@ -17,42 +18,51 @@ class BookingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showBookings()
+    public function getBookings()
     {
         $bookings = Booking::all()
                     ->sortByDesc('checkin');
         $bookings->load('Room');
-        $bookings->load('Guest');
+        $bookings->load('Guest.GuestType');
+        $bookings->load('Guest.Company');
         $bookings->load('BookingType');
         $bookings->load('User');
+        $bookings->load('Billing');
 
         if($bookings->count() <= 0) {
             return response()->json([
-                'message' => 'No bookings to display.'
+                'message' => 'There are no bookings to show.'
             ]);
         }
 
         return response()->json($bookings);
     }
 
-    public function showReservations()
+    public function getReservations()
     {
         $reservations = Booking::whereNotNull('reservationdate')
                             ->where('checkin', '>=', Carbon::now())
                             ->orderBy('checkin')
                             ->get();
         $reservations->load('Room');
-        $reservations->load('Guest');
+        $reservations->load('Guest.GuestType','Guest.Company');
         $reservations->load('BookingType');
         $reservations->load('User');
+        $reservations->load('Billing');
 
         if($reservations->count() <= 0) {
             return response()->json([
-                'message' => 'No reservations to display.'
+                'message' => 'There are no reservations to show.'
             ]);
         }
 
         return response()->json($reservations);
+    }
+
+    public function getBookingTypes()
+    {
+        $booktype = BookingType::select('id as value', 'bookingtype as text')->get();
+        return response()->json($booktype);
     }
 
     /**
@@ -116,15 +126,14 @@ class BookingController extends Controller
     public function reserve(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'checkin' => 'required',
-            'checkout' => 'required',
+            'checkindate' => 'required',
+            'checkintime' => 'required',
             'numpax' => 'required | numeric',
             'guestid' => 'required',
             'roomid' => 'required',
             'bookingtypeid' => 'required',
             'bookingcharge' => 'numeric',
-            'downpayment' => 'numeric',
-            'resdate' => 'required'
+            'downpayment' => 'numeric'
         ]);
 
         if($validator->fails()) {
@@ -133,12 +142,12 @@ class BookingController extends Controller
 
         $reservation = new Booking();
 
-        $reservation->checkin = $request->checkin;
-        $reservation->checkout = $request->checkout;
+        $reservation->checkin = $request->checkindate . ' ' . $request->checkintime;
+        $reservation->checkout = $request->checkoutdate . ' ' . $request->checkouttime;
         $reservation->numberofpax = $request->numpax;
         $reservation->remarks = $request->remarks;
         $reservation->reservationstatus = 0;
-        $reservation->reservationdate = $request->resdate;
+        $reservation->reservationdate = Carbon::now();
         $reservation->guest_id = $request->guestid;
         $reservation->room_id = $request->roomid;
         $reservation->booked_by = 1;//Auth::id();

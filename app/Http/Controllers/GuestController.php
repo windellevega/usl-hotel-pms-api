@@ -17,9 +17,14 @@ class GuestController extends Controller
      */
     public function index()
     {
-        $guests = Guest::all();
-        $guests->load('GuestType');
-        $guests->load('Company');
+        $guests = Guest::with([
+            'Company' => function($q) {
+                $q->select('id','companyname');
+            },
+            'GuestType' => function($q) {
+                $q->select('id','guesttype');
+            }
+        ])->get();
 
         if($guests->count() <= 0) {
             return response()->json([

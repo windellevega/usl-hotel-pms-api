@@ -18,6 +18,8 @@ class Booking extends Model
          'bookingcharge',
     ];
 
+    protected $appends = ['checkindate', 'checkintime', 'checkoutdate', 'checkouttime'];
+
     /**
     * Define relationship to Billing
     **/
@@ -63,7 +65,7 @@ class Booking extends Model
      */
     public function getCheckinAttribute($value)
     {
-        return date('M d, Y h:ia', strtotime($value));
+        return date('M d, Y, h:ia', strtotime($value));
     }
 
     /**
@@ -71,6 +73,38 @@ class Booking extends Model
      */
     public function getCheckoutAttribute($value)
     {
-        return date('M d, Y h:ia', strtotime($value));
+        return date('M d, Y, h:ia', strtotime($value));
+    }
+
+    /**
+     * Define accessor to checkindate
+     */
+    public function getCheckindateAttribute()
+    {
+        return date('Y-m-d', strtotime($this->attributes['checkin']));
+    }
+
+    /**
+     * Define accessor to checkintime
+     */
+    public function getCheckintimeAttribute()
+    {
+        return date('H:i', strtotime($this->attributes['checkin']));
+    }
+    
+    /**
+     * Define accessor to checkindate
+     */
+    public function getCheckoutdateAttribute()
+    {
+        return date('Y-m-d', strtotime($this->attributes['checkout']));
+    }
+
+    /**
+     * Define accessor to checkintime
+     */
+    public function getCheckouttimeAttribute()
+    {
+        return date('H:i', strtotime($this->attributes['checkout']));
     }
 }

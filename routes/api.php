@@ -137,13 +137,13 @@ ROUTES FOR BOOKING METHODS
 //Display all bookings
 Route::get('/bookings', [
     'as' => 'bookings-list',
-    'uses' => 'BookingController@showBookings'
+    'uses' => 'BookingController@getBookings'
 ]);
 
 //Display all reservations
 Route::get('/reservations', [
     'as' => 'resevations-list',
-    'uses' => 'BookingController@showReservations'
+    'uses' => 'BookingController@getReservations'
 ]);
 
 //Add new booking
@@ -165,6 +165,12 @@ Route::get('/booking/{id}', [
     'uses' => 'BookingController@show'
 ]);
 
+//Show booking types
+Route::get('/bookingtypes', [
+    'as' => 'bookingtype-show',
+    'uses' => 'BookingController@getBookingTypes'
+]);
+
 /*
 ----------------------------
 ROUTES FOR OTHER CHARGE METHODS
@@ -182,4 +188,3 @@ Route::delete('/othercharge/{id}', [
     'as' => 'othercharge-delete',
     'uses' => 'OtherChargeController@destroy'
 ]);
-
