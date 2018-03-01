@@ -73,7 +73,9 @@ class Booking extends Model
      */
     public function getCheckoutAttribute($value)
     {
-        return date('M d, Y, h:ia', strtotime($value));
+        if($value != null) {
+            return date('M d, Y, h:ia', strtotime($value));
+        }
     }
 
     /**
@@ -97,7 +99,13 @@ class Booking extends Model
      */
     public function getCheckoutdateAttribute()
     {
-        return date('Y-m-d', strtotime($this->attributes['checkout']));
+        if($this->attributes['checkout'] != null) {
+            return date('Y-m-d', strtotime($this->attributes['checkout']));
+        }
+        else {
+            return null;
+        }
+        
     }
 
     /**
@@ -105,6 +113,11 @@ class Booking extends Model
      */
     public function getCheckouttimeAttribute()
     {
-        return date('H:i', strtotime($this->attributes['checkout']));
+        if($this->attributes['checkout'] != null) {
+            return date('H:i', strtotime($this->attributes['checkout']));
+        }
+        else {
+            return null;
+        }
     }
 }

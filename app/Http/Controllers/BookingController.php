@@ -85,10 +85,10 @@ class BookingController extends Controller
     {
         $validator = \Validator::make($request->all(), [
             'checkin' => 'required',
-            'numpax' => 'required | numeric',
-            'guestid' => 'required',
+            'numberofpax' => 'required | numeric',
+            'guest_id' => 'required',
             'roomid' => 'required',
-            'bookingtypeid' => 'required',
+            'bookingtype_id' => 'required',
             'bookingcharge' => 'numeric',
             'downpayment' => 'numeric'
         ]);
@@ -128,10 +128,10 @@ class BookingController extends Controller
         $validator = \Validator::make($request->all(), [
             'checkindate' => 'required',
             'checkintime' => 'required',
-            'numpax' => 'required | numeric',
-            'guestid' => 'required',
-            'roomid' => 'required',
-            'bookingtypeid' => 'required',
+            'numberofpax' => 'required | numeric',
+            'guest_id' => 'required',
+            'room_id' => 'required',
+            'bookingtype_id' => 'required',
             'bookingcharge' => 'numeric',
             'downpayment' => 'numeric'
         ]);
@@ -143,15 +143,15 @@ class BookingController extends Controller
         $reservation = new Booking();
 
         $reservation->checkin = $request->checkindate . ' ' . $request->checkintime;
-        $reservation->checkout = $request->checkoutdate . ' ' . $request->checkouttime;
-        $reservation->numberofpax = $request->numpax;
+        $reservation->checkout = isset($request->checkoutdate) ? $request->checkoutdate . ' ' . $request->checkouttime : null;
+        $reservation->numberofpax = $request->numberofpax;
         $reservation->remarks = $request->remarks;
         $reservation->reservationstatus = 0;
         $reservation->reservationdate = Carbon::now();
-        $reservation->guest_id = $request->guestid;
-        $reservation->room_id = $request->roomid;
+        $reservation->guest_id = $request->guest_id;
+        $reservation->room_id = $request->room_id;
         $reservation->booked_by = 1;//Auth::id();
-        $reservation->bookingtype_id = $request->bookingtypeid;
+        $reservation->bookingtype_id = $request->bookingtype_id;
         $reservation->bookingcharge = $request->bookingcharge;
 
         $reservation->save();
