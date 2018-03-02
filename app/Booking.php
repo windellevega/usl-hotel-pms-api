@@ -4,8 +4,21 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+use Carbon\Carbon;
+
 class Booking extends Model
 {
+    use SoftDeletes;
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -18,7 +31,7 @@ class Booking extends Model
          'bookingcharge',
     ];
 
-    protected $appends = ['checkindate', 'checkintime', 'checkoutdate', 'checkouttime'];
+    protected $appends = ['checkindate', 'checkintime', 'checkoutdate', 'checkouttime', 'stayduration_days', 'stayduration_hrs'];
 
     /**
     * Define relationship to Billing
@@ -115,6 +128,49 @@ class Booking extends Model
     {
         if($this->attributes['checkout'] != null) {
             return date('H:i', strtotime($this->attributes['checkout']));
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Define accessor to stayduration
+     */
+    public function getStaydurationDaysAttribute()
+    {
+        $start = Carbon::parse($this->attributes['checkin']);
+        $end = Carbon::parse($this->attributes['checkout']);
+        if($this->attributes['checkout'] != null) {
+            $duration = $end->diffInHours($start);
+            if($duration % 24 == 0 && $duration >= 24){
+                return $duration / 24 . (($duration / 24 > 1) ? ' Days' : ' Day');
+            }
+            else if($duration < 24) {
+                return $duration . ' Hrs';
+            }
+            else {
+                $dayduration = round($duration / 24, 0, PHP_ROUND_HALF_DOWN);
+                $days = $dayduration . (($dayduration > 1) ? ' Days' : ' Day');
+                $hrs = $duration % 24 . (($duration % 24 > 1) ? ' Hrs' : ' Hr');
+                return $days . ' ' . $hrs;
+            }
+            
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Define accessor to stayduration
+     */
+    public function getStaydurationHrsAttribute()
+    {
+        $start = Carbon::parse($this->attributes['checkin']);
+        $end = Carbon::parse($this->attributes['checkout']);
+        if($this->attributes['checkout'] != null) {
+            return $end->diffInHours($start);
         }
         else {
             return null;

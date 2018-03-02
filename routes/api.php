@@ -171,6 +171,20 @@ Route::get('/bookingtypes', [
     'uses' => 'BookingController@getBookingTypes'
 ]);
 
+//Update reservation detail
+//@parameter: id - booking id
+Route::patch('/reservation/{id}', [
+    'as' => 'reservation-update',
+    'uses' => 'BookingController@updateReservation'
+]);
+
+//Delete booking/reservation
+//@parameter: id - booking id
+Route::delete('/booking/{id}', [
+    'as' => 'booking-delete',
+    'uses' => 'BookingController@destroy'
+]);
+
 /*
 ----------------------------
 ROUTES FOR OTHER CHARGE METHODS
