@@ -105,9 +105,10 @@ class BookingController extends Controller
         $booking->remarks = $request->remarks;
         $booking->guest_id = $request->guestid;
         $booking->room_id = $request->roomid;
-        $booking->booked_by = 1;//Auth::id();
+        $booking->booked_by = Auth::id();
         $booking->bookingtype_id = $request->bookingtypeid;
         $booking->bookingcharge = $request->bookingcharge;
+        $booking->bookingstatus = 1; //0 - reserved, 1 - booked, 2 - checked out, 3 - paid
 
         $booking->save();
 
@@ -153,13 +154,14 @@ class BookingController extends Controller
         $reservation->checkout = $request->checkoutdate . ' ' . $request->checkouttime;
         $reservation->numberofpax = $request->numberofpax;
         $reservation->remarks = $request->remarks;
-        $reservation->reservationstatus = 0;
+        $reservation->reservationstatus = 0; //0 - for approval, 1 - approved, 2 - disapproved
         $reservation->reservationdate = Carbon::now();
         $reservation->guest_id = $request->guest_id;
         $reservation->room_id = $request->room_id;
-        $reservation->booked_by = 1;//Auth::id();
+        $reservation->booked_by = Auth::id();
         $reservation->bookingtype_id = $request->bookingtype_id;
         $reservation->bookingcharge = $request->bookingcharge;
+        $reservation->bookingstatus = 0; //0 - reserved, 1 - booked, 2 - checked out, 3 - paid
 
         $reservation->save();
 
@@ -252,10 +254,9 @@ class BookingController extends Controller
         $reservation->checkout = $request->checkoutdate . ' ' . $request->checkouttime;
         $reservation->numberofpax = $request->numberofpax;
         $reservation->remarks = $request->remarks;
-        $reservation->reservationstatus = 0;
         $reservation->guest_id = $request->guest_id;
         $reservation->room_id = $request->room_id;
-        $reservation->booked_by = 1;//Auth::id();
+        $reservation->booked_by = Auth::id();
         $reservation->bookingtype_id = $request->bookingtype_id;
         $reservation->bookingcharge = $request->bookingcharge;
 

@@ -28,7 +28,7 @@ class Booking extends Model
         'guest_id', 'room_id', 'booked_by', 'bookingtype_id', 
         'checkin', 'checkout', 'numberofpax',
          'remarks', 'reservationstatus', 'reservationdate',
-         'bookingcharge',
+         'bookingcharge', 'bookingstatus'
     ];
 
     protected $appends = ['checkindate', 'checkintime', 'checkoutdate', 'checkouttime', 'stayduration_days', 'stayduration_hrs'];
