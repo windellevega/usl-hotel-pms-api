@@ -23,8 +23,7 @@ class BookingController extends Controller
         $bookings = Booking::all()
                     ->sortByDesc('checkin');
         $bookings->load('Room');
-        $bookings->load('Guest.GuestType');
-        $bookings->load('Guest.Company');
+        $bookings->load('Guest.GuestType', 'Guest.Company');
         $bookings->load('BookingType');
         $bookings->load('User');
         $bookings->load('Billing');
@@ -184,17 +183,39 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, $bstatus = 'all')
     {
         $booking = Booking::where('id', $id)
                     ->get();
+        
         $booking->load('BookingType');
         $booking->load('Room');
         $booking->load('Billing');
         $booking->load('Billing.OtherCharge');
-        $booking->load('Guest');
-        $booking->load('Guest.GuestType');
-        $booking->load('Guest.Company');
+        $booking->load('Guest.GuestType', 'Guest.Company');
+
+        if($booking->count() != 0) {
+            return response()->json($booking);
+        }
+        else {
+            return response()->json([
+                'message' => "This booking doesn't exist"
+            ]);
+        }
+    }
+
+    public function showBookingByRoom($roomid)
+    {
+
+        $booking = Booking::where('room_id', $roomid)
+                    ->where('bookingstatus', 1)
+                    ->first();
+        
+        $booking->load('BookingType');
+        $booking->load('Room');
+        $booking->load('Billing');
+        $booking->load('Billing.OtherCharge');
+        $booking->load('Guest.GuestType', 'Guest.Company');
 
         if($booking->count() != 0) {
             return response()->json($booking);
@@ -262,8 +283,8 @@ class BookingController extends Controller
 
         $reservation->save();
 
-        $billing = new Billing();
-        $billing->booking_id = $reservation->id;
+        $billing = Billing::where('booking_id', $reservation->id)
+                    ->first();
         $billing->downpayment = $request['billing']['downpayment'];
         $billing->totalcharges = $request->bookingcharge;
 

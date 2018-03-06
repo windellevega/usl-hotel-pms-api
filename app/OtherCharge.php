@@ -12,9 +12,10 @@ class OtherCharge extends Model
      * @var array
      */
     protected $fillable = [
-        'billing_id',
+        'billing_id', 'quantity',
         'othercharge_info', 'cost',
     ];
+    protected $appends = ['totalcost'];
 
     /**
     * Define relationship to Billing
@@ -22,5 +23,13 @@ class OtherCharge extends Model
     public function Billing()
     {
         return $this->belongsTo('App\Billing');
+    }
+
+    /**
+     * Define accessor to totalcost
+     */
+    public function getTotalcostAttribute()
+    {
+        return number_format($this->attributes['cost'] * $this->attributes['quantity'], 2);
     }
 }

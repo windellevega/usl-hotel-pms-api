@@ -165,6 +165,13 @@ Route::middleware('auth:api')->get('/booking/{id}', [
     'uses' => 'BookingController@show'
 ]);
 
+//Show booking or reservation detail for a particular room
+//@parameter: id - room id
+Route::middleware('auth:api')->get('/booking-by-room/{id}', [
+    'as' => 'booking-by-room-show',
+    'uses' => 'BookingController@showBookingByRoom'
+]);
+
 //Show booking types
 Route::middleware('auth:api')->get('/bookingtypes', [
     'as' => 'bookingtype-show',

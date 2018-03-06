@@ -38,9 +38,10 @@ class OtherChargeController extends Controller
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'otherchargeinfo' => 'required',
+            'othercharge_info' => 'required',
             'cost' => 'numeric',
-            'billingid' => 'required'
+            'billingid' => 'required',
+            'quantity' => 'required | numeric'
         ]);
 
         if($validator->fails()) {
@@ -49,15 +50,16 @@ class OtherChargeController extends Controller
 
         $othercharge = new OtherCharge();
 
-        $othercharge->othercharge_info = $request->otherchargeinfo;
+        $othercharge->othercharge_info = $request->othercharge_info;
         $othercharge->cost = $request->cost;
+        $othercharge->quantity = $request->quantity;
         $othercharge->billing_id = $request->billingid;
 
         $othercharge->save();
 
         $billing = Billing::find($request->billingid);
 
-        $billing->totalcharges += $request->cost;
+        $billing->totalcharges += $request->cost * $request->quantity;
 
         $billing->save();
 
@@ -108,16 +110,16 @@ class OtherChargeController extends Controller
      */
     public function destroy($id)
     {
-        $othercharge = OtherCharge::find( $id);
+        $othercharge = OtherCharge::find($id);
         
         $billing = Billing::find($othercharge->billing_id);
-        $billing->totalcharges -= $othercharge->cost;
+        $billing->totalcharges -= $othercharge->cost * $othercharge->quantity;
         $billing->save();
 
         $othercharge->delete();
 
         return response()->json([
-            'message' => 'Other charge was removed'
+            'message' => 'Other charge was removed.'
         ]);
     }
 }
