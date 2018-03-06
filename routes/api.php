@@ -209,3 +209,8 @@ Route::middleware('auth:api')->delete('/othercharge/{id}', [
     'as' => 'othercharge-delete',
     'uses' => 'OtherChargeController@destroy'
 ]);
+
+Route::middleware('auth:api')->get('/othercharges/{id}', [
+    'as' => 'othercharges-show',
+    'uses' => 'OtherChargeController@show'
+]);

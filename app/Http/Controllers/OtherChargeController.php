@@ -76,7 +76,9 @@ class OtherChargeController extends Controller
      */
     public function show($id)
     {
-        //
+        $othercharges = OtherCharge::where('billing_id', $id)
+                        ->get();
+        return response()->json($othercharges);
     }
 
     /** 
