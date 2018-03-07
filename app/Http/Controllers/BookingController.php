@@ -11,6 +11,7 @@ use App\Booking;
 use App\BookingType;
 use App\Billing;
 use App\Room;
+use App\StatusHistory;
 
 class BookingController extends Controller
 {
@@ -84,13 +85,19 @@ class BookingController extends Controller
     public function book(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'checkin' => 'required',
             'numberofpax' => 'required | numeric',
+            'checkoutdate' => 'required',
+            'checkouttime' => 'required',
             'guest_id' => 'required',
-            'roomid' => 'required',
+            'room_id' => 'required',
             'bookingtype_id' => 'required',
             'bookingcharge' => 'numeric',
             'billing.downpayment' => 'numeric'
+        ],
+        [
+            'guest_id.required' => 'The guest name field is required.',
+            'room_id.required' => 'The room information field is required.',
+            'bookingtype_id.required' => 'The booking type field is required.'
         ]);
 
         if($validator->fails()) {
@@ -100,13 +107,13 @@ class BookingController extends Controller
         $booking = new Booking();
 
         $booking->checkin = Carbon::now();
-        $booking->checkout = $request->checkout;
-        $booking->numberofpax = $request->numpax;
+        $booking->checkout = $request->checkoutdate . ' ' . $request->checkouttime;
+        $booking->numberofpax = $request->numberofpax;
         $booking->remarks = $request->remarks;
-        $booking->guest_id = $request->guestid;
-        $booking->room_id = $request->roomid;
+        $booking->guest_id = $request->guest_id;
+        $booking->room_id = $request->room_id;
         $booking->booked_by = Auth::id();
-        $booking->bookingtype_id = $request->bookingtypeid;
+        $booking->bookingtype_id = $request->bookingtype_id;
         $booking->bookingcharge = $request->bookingcharge;
         $booking->bookingstatus = 1; //0 - reserved, 1 - booked, 2 - checked out, 3 - paid
 
@@ -118,6 +125,14 @@ class BookingController extends Controller
         $billing->totalcharges = $request->bookingcharge;
 
         $billing->save();
+
+        $roomhistory = new StatusHistory();
+        $roomhistory->status_id = 4;
+        $roomhistory->room_id = $request->room_id;
+        $roomhistory->statusdate = Carbon::now();
+        $roomhistory->remarks = 'Walk-in booking';
+
+        $roomhistory->save();
 
         return response()->json([
             'message' => 'Booking added successfully.'

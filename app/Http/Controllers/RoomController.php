@@ -185,25 +185,26 @@ class RoomController extends Controller
             return response()->json($validator->errors()->all());
         }
         if($request->statusid == 4) {
+            /**
+             * For status 4 (Occupied)
+             */
+            //Check if checkin data is within the current day and bookingstatus is reserved
             $booking = Booking::where('room_id', $id)
                         ->where('bookingstatus', 0)
                         ->where('checkin', '>', date('Y-m-d') . ' 00:01')
                         ->where('checkin', '<', date('Y-m-d') . ' 23:59')
                         ->first();
             if(!$booking) {
-                $booking = Booking::where('room_id', $id)
-                        ->where('bookingstatus', 1)
-                        ->where('checkin', '<', Carbon::now())
-                        ->where('checkout', '>', Carbon::now())
-                        ->first();
-                if(!$booking) {
-                    return 0;
-                }
+                return 0;
             }
             $booking->bookingstatus = 1;
             $booking->save();
         }
-        else if($request->statusid == 5 || $request->statusid == 8) {
+        else if($request->statusid == 4 || $request->statusid == 5 || $request->statusid == 8) {
+            /**
+             * For status 4 (Occupied), 5 (Do not disturb) and 6 (Due out)
+             */
+            //Check if current date is within checkin and checkout period and currently booked
             $booking = Booking::where('room_id', $id)
                         ->where('bookingstatus', 1)
                         ->where('checkin', '<', Carbon::now())
@@ -214,6 +215,10 @@ class RoomController extends Controller
             }
         }
         else {
+            /**
+             * For other statuses
+             */
+            //Check if room is currently being booked (cannot change status unless checked out)
             $booking = Booking::where('room_id', $id)
                         ->where('bookingstatus', 1)
                         ->first();
