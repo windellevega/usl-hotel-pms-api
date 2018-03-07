@@ -184,6 +184,43 @@ class RoomController extends Controller
         if($validator->fails()) {
             return response()->json($validator->errors()->all());
         }
+        if($request->statusid == 4) {
+            $booking = Booking::where('room_id', $id)
+                        ->where('bookingstatus', 0)
+                        ->where('checkin', '>', date('Y-m-d') . ' 00:01')
+                        ->where('checkin', '<', date('Y-m-d') . ' 23:59')
+                        ->first();
+            if(!$booking) {
+                $booking = Booking::where('room_id', $id)
+                        ->where('bookingstatus', 1)
+                        ->where('checkin', '<', Carbon::now())
+                        ->where('checkout', '>', Carbon::now())
+                        ->first();
+                if(!$booking) {
+                    return 0;
+                }
+            }
+            $booking->bookingstatus = 1;
+            $booking->save();
+        }
+        else if($request->statusid == 5 || $request->statusid == 8) {
+            $booking = Booking::where('room_id', $id)
+                        ->where('bookingstatus', 1)
+                        ->where('checkin', '<', Carbon::now())
+                        ->where('checkout', '>', Carbon::now())
+                        ->first();
+            if(!$booking) {
+                return 0;
+            }
+        }
+        else {
+            $booking = Booking::where('room_id', $id)
+                        ->where('bookingstatus', 1)
+                        ->first();
+            if($booking) {
+                return 1;
+            }
+        }
 
         $roomstatus = new StatusHistory();
 
