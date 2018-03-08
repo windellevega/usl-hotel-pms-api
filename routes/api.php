@@ -108,7 +108,7 @@ Route::get('/guests', [
 ]);
 
 //Add new guest
-Route::middleware('auth:api')->post('/guest/add', [
+Route::middleware('auth:api')->post('/guest', [
     'as' => 'guest-add',
     'uses' => 'GuestController@store'
 ]);
