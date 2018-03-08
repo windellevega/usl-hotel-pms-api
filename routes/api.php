@@ -102,7 +102,7 @@ ROUTES FOR GUEST METHODS
 */
 
 //Display all guests
-Route::middleware('auth:api')->get('/guests', [
+Route::get('/guests', [
     'as' => 'guests-list',
     'uses' => 'GuestController@index'
 ]);
@@ -127,6 +127,11 @@ Route::middleware('auth:api')->patch('/guest/{id}', [
     'uses' => 'GuestController@update'
 ]);
 
+//Retrieve all guest types
+Route::middleware('auth:api')->get('/guesttypes', [
+    'as' => 'guesttypes-list',
+    'uses' => 'GuestController@getGuestTypes'
+]);
 
 /*
 ----------------------------

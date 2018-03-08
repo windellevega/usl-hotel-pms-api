@@ -19,7 +19,7 @@ class GuestController extends Controller
     {
         $guests = Guest::with([
             'Company' => function($q) {
-                $q->select('id','companyname');
+                $q->select('id','companyname', 'companyaddress');
             },
             'GuestType' => function($q) {
                 $q->select('id','guesttype');
@@ -158,5 +158,15 @@ class GuestController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Retrieve all guest types
+     */
+    public function getGuestTypes()
+    {
+        $guesttypes = GuestType::select('id as value', 'guesttype as text')->get();
+
+        return response()->json($guesttypes);
     }
 }
