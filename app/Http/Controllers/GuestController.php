@@ -128,23 +128,22 @@ class GuestController extends Controller
         $validator = \Validator::make($request->all(), [
             'firstname' => 'required',
             'lastname' => 'required',
-            'gtypeid' => 'required',
+            'guesttype_id' => 'required',
             'contactno' => 'numeric|regex:/(09)[0-9]{9}/',
-            'companyid' => 'required'
+            'company_id' => 'required'
+        ],
+        [
+            'guesttype_id.required' => 'The guest type field is required',
+            'company_id.required' => 'The company name field is required.'
         ]);
 
-        if($validator->fails()) {
-            return response()->json($validator->errors()->all());
-        }
-
-        $guest = Guest::where('id', $id)
-                    ->first();
+        $guest = Guest::find($id);
 
         $guest->firstname = $request->firstname;
         $guest->lastname = $request->lastname;
-        $guest->guesttype_id = $request->gtypeid;
+        $guest->guesttype_id = $request->guesttype_id;
         $guest->contactno = $request->contactno;
-        $guest->company_id = $request->companyid;
+        $guest->company_id = $request->company_id;
 
         $guest->save();
 
@@ -161,7 +160,12 @@ class GuestController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $guest = Guest::find($id);
+        $guest->delete();
+        
+        return response()->json([
+            'message' => 'Guest information is removed from the list.'
+        ]);
     }
 
     /**

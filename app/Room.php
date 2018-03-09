@@ -16,6 +16,13 @@ class Room extends Model
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['created_at', 'updated_at', 'statusdate'];
+
+    /**
     * Define relationship to Booking
     **/
     public function Booking()
@@ -37,7 +44,7 @@ class Room extends Model
     public function StatusHistory()
     {
         return $this->hasMany('App\StatusHistory')
-        ->orderBy('created_at', 'DESC');
+        ->orderBy('statusdate', 'DESC');
     }
 
     public function LatestStatus()

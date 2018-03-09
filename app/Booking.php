@@ -17,7 +17,7 @@ class Booking extends Model
      *
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
     
     /**
      * The attributes that are mass assignable.

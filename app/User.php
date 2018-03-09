@@ -30,6 +30,13 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['created_at', 'updated_at'];
+
+    /**
     * Define relationship to Booking
     **/
     public function Booking()
