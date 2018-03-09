@@ -176,7 +176,7 @@ class BookingController extends Controller
         $reservation->booked_by = Auth::id();
         $reservation->bookingtype_id = $request->bookingtype_id;
         $reservation->bookingcharge = $request->bookingcharge;
-        $reservation->bookingstatus = 0; //0 - reserved, 1 - booked, 2 - checked out, 3 - paid
+        $reservation->bookingstatus = 0; //0 - reserved, 1 - booked, 2 - checked out
 
         $reservation->save();
 
@@ -331,6 +331,39 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'Booking successfully removed.'
+        ]);
+    }
+
+    /**
+     * Check-out specified booking
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function checkout(Request $request, $id)
+    {
+        $validator = \Validator::make($request->all(), [
+            'room_id' => 'required',
+            'roomstatus' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+
+        $booking = Booking::find($id);
+        $booking->bookingstatus = 2;
+        $booking->save();
+
+        $statushistory = new StatusHistory();
+        $statushistory->status_id = $request->roomstatus;
+        $statushistory->room_id = $request->room_id;
+        $statushistory->statusdate = Carbon::now();
+        $statushistory->remarks = 'Status after room check-out';
+        $statushistory->save();
+
+        return response()->json([
+            'message' => 'Room successfully checked-out'
         ]);
     }
 }

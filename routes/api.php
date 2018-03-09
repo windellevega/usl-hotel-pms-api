@@ -225,7 +225,7 @@ Route::middleware('auth:api')->get('/booking/{id}', [
  * Show booking or reservation detail for a particular room
  * @param: id - room id
  */
-Route::middleware('auth:api')->get('/booking-by-room/{id}', [
+Route::get('/booking-by-room/{id}', [
     'as' => 'booking-by-room-show',
     'uses' => 'BookingController@showBookingByRoom'
 ]);
@@ -254,6 +254,14 @@ Route::middleware('auth:api')->patch('/reservation/{id}', [
 Route::middleware('auth:api')->delete('/booking/{id}', [
     'as' => 'booking-delete',
     'uses' => 'BookingController@destroy'
+]);
+/**
+ * Check-out booking
+ * @param: id - booking id
+ */
+Route::middleware('auth:api')->patch('/booking/check-out/{id}', [
+    'as' => 'booking-check-out',
+    'uses' => 'BookingController@checkout'
 ]);
 
 /**
