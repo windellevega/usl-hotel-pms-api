@@ -24,7 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  */
 
 /**
- * Display all rooms
+ * Get all rooms
  */
 Route::get('/rooms', [
     'as' => 'rooms-list',
@@ -40,7 +40,7 @@ Route::middleware('auth:api')->post('/room/add', [
 ]);
 
 /**
- * Display specific room detail
+ * Get specific room detail
  * @param: id - room id
  */
 Route::middleware('auth:api')->get('/room/{id}', [
@@ -83,7 +83,7 @@ Route::middleware('auth:api')->get('room/reservationdates/{id}', [
  */
 
 /**
- * Display all companies
+ * Get all companies
  */
 Route::middleware('auth:api')->get('/companies', [
     'as' => 'companies-list',
@@ -99,7 +99,7 @@ Route::middleware('auth:api')->post('/company', [
 ]);
 
 /**
- * Display specific company detail
+ * Get specific company detail
  * @param: id - company id
  */
 Route::middleware('auth:api')->get('/company/{id}', [
@@ -124,7 +124,7 @@ Route::middleware('auth:api')->patch('/company/{id}', [
  */
 
 /**
- * Display all guests
+ * Get all guests
  */
 Route::get('/guests', [
     'as' => 'guests-list',
@@ -140,7 +140,7 @@ Route::middleware('auth:api')->post('/guest', [
 ]);
 
 /** 
- * Display specific guest detail
+ * Get specific guest detail
  * @param: id - guest id
  */
 Route::middleware('auth:api')->get('/guest/{id}', [
@@ -158,7 +158,7 @@ Route::middleware('auth:api')->patch('/guest/{id}', [
 ]);
 
 /**
- * Retrieve all guest types
+ * Get all guest types
  */
 Route::middleware('auth:api')->get('/guesttypes', [
     'as' => 'guesttypes-list',
@@ -182,6 +182,7 @@ Route::middleware('auth:api')->delete('/guest/{id}', [
     'uses' => 'GuestController@destroy'
 ]);
 
+
 /** 
  * ----------------------------
  * ROUTES FOR BOOKING METHODS
@@ -189,7 +190,7 @@ Route::middleware('auth:api')->delete('/guest/{id}', [
  */
 
 /**
- * Display all bookings
+ * Get all bookings
  */
 Route::middleware('auth:api')->get('/bookings', [
     'as' => 'bookings-list',
@@ -197,7 +198,7 @@ Route::middleware('auth:api')->get('/bookings', [
 ]);
 
 /**
- * Display all reservations
+ * Get all reservations
  */
 Route::middleware('auth:api')->get('/reservations', [
     'as' => 'resevations-list',
@@ -272,6 +273,7 @@ Route::middleware('auth:api')->patch('/booking/check-out/{id}', [
     'uses' => 'BookingController@checkout'
 ]);
 
+
 /**
  * --------------------------------
  * ROUTES FOR OTHER CHARGE METHODS
@@ -303,3 +305,43 @@ Route::middleware('auth:api')->get('/othercharges/{id}', [
     'as' => 'othercharges-show',
     'uses' => 'OtherChargeController@show'
 ]);
+
+/**
+ * ------------------------
+ * ROUTES FOR USER METHODS
+ * ------------------------
+ */
+
+ /**
+  * Get all user information
+  */
+  Route::get('/users', [
+      'as' => 'users-list',
+      'uses' => 'UserController@index'
+  ]);
+  
+  /**
+   * Add user information
+   */
+  Route::middleware('auth:api')->post('/user', [
+      'as' => 'user-add',
+      'uses' => 'UserController@store'
+  ]);
+
+  /**
+   * Edit user information
+   * @param: id - user id
+   */
+  Route::middleware('auth:api')->patch('/user/{id}', [
+      'as' => 'user-update',
+      'uses' => 'UserController@update'
+  ]);
+
+  /**
+   * Delete user
+   * @param: id - user id
+   */
+  Route::middleware('auth:api')->delete('/user/{id}', [
+      'as' => 'user-delete',
+      'uses' => 'UserController@destroy'
+  ]);

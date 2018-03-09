@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Company;
+use Illuminate\Support\Facades\Hash;
+use App\User;
 
-class CompanyController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,15 +16,15 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::all();
+        $users = User::all();
 
-        if($companies->count() <= 0) {
+        if($users->count() <= 0) {
             return response()->json([
                 'message' => 'No companies found.'
             ]);
         }
 
-        return response()->json($companies);
+        return response()->json($users);
     }
 
     /**
@@ -45,23 +46,26 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'companyname' => 'required|unique:companies,companyname',
-            'companyaddress' => 'required'
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'username' => 'required | unique:users,username',
+            'password' => 'required'
         ]);
 
         if($validator->fails()) {
             return response()->json($validator->errors()->all());
         }
 
-        $company = new Company();
-
-        $company->companyname = $request->companyname;
-        $company->companyaddress = $request->companyaddress;
-
-        $company->save();
+        $user = new User();
+        $user->firstname = $request->firstname;
+        $user->lastname = $request->lastname;
+        $user->username = $request->username;
+        $user->password = Hash::make($request->password);
+        $user->user_type = 1;
+        $user->save();
 
         return response()->json([
-            'message' => 'Company added successfully.'
+            'message' => 'User registered successfully.'
         ]);
     }
 
@@ -73,14 +77,7 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        $company = Company::where('id', $id)
-                        ->get();
-        if($company->count() <= 0) {
-            return response()->json([
-                'message' => 'Company not found.'
-            ]);
-        }
-        return response()->json($company);
+        //
     }
 
     /**
@@ -91,7 +88,7 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -104,21 +101,29 @@ class CompanyController extends Controller
     public function update(Request $request, $id)
     {
         $validator = \Validator::make($request->all(), [
-            'name' => 'required|unique:companies,companyname'
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'oldpassword' => 'required',
+            'password' => 'required'
         ]);
 
         if($validator->fails()) {
             return response()->json($validator->errors()->all());
         }
 
-        $company = Company::find($id);
-
-        $company->companyname = $request->name;
-
-        $company->save();
+        $user = User::find($id);
+        if(Hash::check($user->password, $request->oldpassword)) {
+            $validator->getMessageBag()->add('oldpassword', $user->password);
+            return response()->json($validator->errors()->all());
+        }
+        $user->firstname = $request->firstname;
+        $user->lastname = $request->lastname;
+        $user->password = Hash::make($request->password);
+        $user->user_type = 1;
+        $user->save();
 
         return response()->json([
-            'message' => 'Company information updated successfully.'
+            'message' => 'User information updated successfully.'
         ]);
     }
 
@@ -130,6 +135,11 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User has been deleted.'
+        ]);
     }
 }
