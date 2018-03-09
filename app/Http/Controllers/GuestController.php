@@ -85,6 +85,32 @@ class GuestController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addGuestType(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'guesttype' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+
+        $guesttype = new GuestType();
+        $guesttype->guesttype = $request->guesttype;
+        $guesttype->save();
+        
+        return response()->json([
+            'message' => 'Guest type added successfully.'
+        ]);
+
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id

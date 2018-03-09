@@ -166,6 +166,14 @@ Route::middleware('auth:api')->get('/guesttypes', [
 ]);
 
 /**
+ * Add guest type
+ */
+Route::middleware('auth:api')->post('/guesttype', [
+    'as' => 'guesttype-add',
+    'uses' => 'GuestController@addGuestType'
+]);
+
+/**
  * Delete guest infomation
  * @param = id - guest id
  */
