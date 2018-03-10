@@ -200,7 +200,7 @@ Route::middleware('auth:api')->get('/bookings', [
 /**
  * Get all reservations
  */
-Route::middleware('auth:api')->get('/reservations', [
+Route::get('/reservations', [
     'as' => 'resevations-list',
     'uses' => 'BookingController@getReservations'
 ]);

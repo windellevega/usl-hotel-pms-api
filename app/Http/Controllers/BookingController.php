@@ -42,7 +42,7 @@ class BookingController extends Controller
     public function getReservations()
     {
         $reservations = Booking::whereNotNull('reservationdate')
-                            ->where('checkin', '>=', Carbon::now())
+                            ->where('checkin', '>=', Carbon::today())
                             ->orderBy('checkin')
                             ->get();
         $reservations->load('Room');
