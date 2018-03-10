@@ -57,7 +57,7 @@ class GuestController extends Controller
             'firstname' => 'required',
             'lastname' => 'required',
             'guesttype_id' => 'required',
-            'contactno' => 'numeric|regex:/(09)[0-9]{9}/',
+            'contactno' => 'numeric',
             'company_id' => 'required'
         ],
         [

@@ -17,7 +17,7 @@ class Booking extends Model
      *
      * @var array
      */
-    protected $dates = ['deleted_at', 'created_at', 'updated_at', 'checkin', 'checkout'];
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
     
     /**
      * The attributes that are mass assignable.
@@ -26,6 +26,7 @@ class Booking extends Model
      */
     protected $fillable = [
         'guest_id', 'room_id', 'booked_by', 'bookingtype_id', 
+        'checkin', 'checkout',
         'numberofpax', 'remarks', 'reservationstatus', 'reservationdate',
          'bookingcharge', 'bookingstatus'
     ];

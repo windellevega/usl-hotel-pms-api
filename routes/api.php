@@ -234,7 +234,7 @@ Route::middleware('auth:api')->get('/booking/{id}', [
  * Show booking or reservation detail for a particular room
  * @param: id - room id
  */
-Route::get('/booking-by-room/{id}', [
+Route::middleware('auth:api')->get('/booking-by-room/{id}', [
     'as' => 'booking-by-room-show',
     'uses' => 'BookingController@showBookingByRoom'
 ]);
