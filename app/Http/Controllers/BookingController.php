@@ -42,7 +42,6 @@ class BookingController extends Controller
     public function getReservations()
     {
         $reservations = Booking::whereNotNull('reservationdate')
-                            ->where('checkin', '>=', Carbon::today())
                             ->orderBy('checkin')
                             ->get();
         $reservations->load('Room');
@@ -294,6 +293,7 @@ class BookingController extends Controller
         $reservation->guest_id = $request->guest_id;
         $reservation->room_id = $request->room_id;
         $reservation->booked_by = Auth::id();
+        $reservation->updated_by = Auth::id();
         $reservation->bookingtype_id = $request->bookingtype_id;
         $reservation->bookingcharge = $request->bookingcharge;
 
@@ -308,6 +308,26 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'Reservation detail updated successfully.'
+        ]);
+    }
+
+    public function modifyBookingCharge(Request $request, $id)
+    {
+        $booking = Booking::find($id);
+
+        $chargeDiff = $booking->bookingcharge - $request->bookingcharge;
+        $oldcharge = $booking->bookingcharge;
+
+        $booking->bookingcharge = $request->bookingcharge;
+        $booking->save();
+
+        $billing = Billing::where('booking_id', $id)
+                    ->first();
+        $billing->totalcharges -= $chargeDiff;
+        $billing->save();
+
+        return response()->json([
+            'message' => 'Booking charge has been changed from ₱' . $oldcharge . ' to ₱' . $request->bookingcharge . '.'
         ]);
     }
 

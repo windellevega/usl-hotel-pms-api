@@ -112,10 +112,17 @@ class UserController extends Controller
         }
 
         $user = User::find($id);
-        if(Hash::check($user->password, $request->oldpassword)) {
-            $validator->getMessageBag()->add('oldpassword', $user->password);
+
+        if(!Hash::check($request->oldpassword, $user->password)) {
+            $validator->getMessageBag()->add('oldpassword', 'Old password is incorrect.');
             return response()->json($validator->errors()->all());
         }
+
+        if(Hash::check($request->password, $user->password)) {
+            $validator->getMessageBag()->add('oldpassword', 'Old password must not be used.');
+            return response()->json($validator->errors()->all());
+        }
+        
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
         $user->password = Hash::make($request->password);

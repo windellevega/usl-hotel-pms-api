@@ -34,7 +34,7 @@ Route::get('/rooms', [
 /**
  * Add new room
  */
-Route::middleware('auth:api')->post('/room/add', [
+Route::middleware('auth:api')->post('/room', [
     'as' => 'room-add',
     'uses' => 'RoomController@store'
 ]);
@@ -264,6 +264,7 @@ Route::middleware('auth:api')->delete('/booking/{id}', [
     'as' => 'booking-delete',
     'uses' => 'BookingController@destroy'
 ]);
+
 /**
  * Check-out booking
  * @param: id - booking id
@@ -271,6 +272,15 @@ Route::middleware('auth:api')->delete('/booking/{id}', [
 Route::middleware('auth:api')->patch('/booking/check-out/{id}', [
     'as' => 'booking-check-out',
     'uses' => 'BookingController@checkout'
+]);
+
+/**
+ * Modify bookingcharge
+ * @param: id - booking id
+ */
+Route::middleware('auth:api')->patch('/booking/bookingcharge/{id}', [
+    'as' => 'bookingcharge-update',
+    'uses' => 'BookingController@modifyBookingCharge'
 ]);
 
 

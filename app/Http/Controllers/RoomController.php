@@ -33,8 +33,7 @@ class RoomController extends Controller
             ]);
         }
         
-        //$rooms->load('RoomRate');
-        //$rooms->load('RoomRate.Rate');
+        $rooms->load('RoomRate.Rate');
         $rooms->load('StatusHistory.Status');
 
         return response()->json($rooms);
@@ -164,9 +163,9 @@ class RoomController extends Controller
     {
 
         $room = Room::find($id);
-        $room->room_name = isset($request->roomname) ? $request->roomname : $room->room_name;
-        $room->room_description = isset($request->roomname) ? $request->roomdesc : $room->room_description;
-        $room->capacity = isset($request->capacity) ? $request->capacity : $room->capacity;
+        $room->room_name = $request->room_name;
+        $room->room_description = $request->room_description;
+        $room->capacity = $request->capacity;
 
         $room->save();
 
