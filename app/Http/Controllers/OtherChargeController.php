@@ -44,22 +44,32 @@ class OtherChargeController extends Controller
             'quantity' => 'required | numeric'
         ]);
 
+        
         if($validator->fails()) {
             return response()->json($validator->errors()->all());
         }
 
-        $othercharge = new OtherCharge();
+        $othercharge = OtherCharge::where('othercharge_info', $request->othercharge_info)
+                        ->where('billing_id', $request->billingid)
+                        ->first();
 
-        $othercharge->othercharge_info = $request->othercharge_info;
-        $othercharge->cost = $request->cost;
-        $othercharge->quantity = $request->quantity;
-        $othercharge->billing_id = $request->billingid;
+        if($othercharge->count() != 0) {
+            $othercharge->quantity += $request->quantity;
+        }
+        else {
+            $othercharge = new OtherCharge();
+
+            $othercharge->othercharge_info = $request->othercharge_info;
+            $othercharge->cost = $request->cost;
+            $othercharge->quantity = $request->quantity;
+            $othercharge->billing_id = $request->billingid;
+        }
 
         $othercharge->save();
 
         $billing = Billing::find($request->billingid);
 
-        $billing->totalcharges += $request->cost * $request->quantity;
+        $billing->totalcharges += $othercharge->cost * $request->quantity;
 
         $billing->save();
 
