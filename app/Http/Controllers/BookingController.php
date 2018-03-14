@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Carbon\Carbon;
+use PDF;
 
 use App\Booking;
 use App\BookingType;
@@ -385,5 +386,10 @@ class BookingController extends Controller
         return response()->json([
             'message' => 'Room successfully checked-out'
         ]);
+    }
+
+    public function generateInvoice() {
+        $pdf = PDF::loadView('invoice');
+        return $pdf->stream('invoice.pdf', array("Attachment" => 0));
     }
 }

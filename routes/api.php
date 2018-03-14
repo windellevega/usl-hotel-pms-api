@@ -16,6 +16,10 @@ use Illuminate\Http\Request;
 Route::get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/invoice', [
+    'as' => 'invoice-generate',
+    'uses' => 'BookingController@generateInvoice'
+]);
 
 Route::middleware('auth:api')->group(function() {
     /**
