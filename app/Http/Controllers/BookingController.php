@@ -116,6 +116,7 @@ class BookingController extends Controller
         $booking->bookingtype_id = $request->bookingtype_id;
         $booking->bookingcharge = $request->bookingcharge;
         $booking->bookingstatus = 1; //0 - reserved, 1 - booked, 2 - checked out, 3 - paid
+        $booking->actual_checkin = Carbon::now();
 
         $booking->save();
 
@@ -374,6 +375,7 @@ class BookingController extends Controller
 
         $booking = Booking::find($id);
         $booking->bookingstatus = 2;
+        $booking->actual_checkout = Carbon::now();
         $booking->save();
 
         $statushistory = new StatusHistory();

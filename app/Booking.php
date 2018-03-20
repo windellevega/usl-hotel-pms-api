@@ -26,7 +26,7 @@ class Booking extends Model
      */
     protected $fillable = [
         'guest_id', 'room_id', 'booked_by', 'bookingtype_id', 
-        'checkin', 'checkout',
+        'checkin', 'checkout', 'actual_checkin', 'actual_checkout',
         'numberofpax', 'remarks', 'reservationstatus', 'reservationdate',
          'bookingcharge', 'bookingstatus'
     ];
@@ -82,6 +82,14 @@ class Booking extends Model
     }
 
     /**
+     * Define accessor to format actual_checkin attribute
+     */
+    public function getActualCheckinAttribute($value)
+    {
+        return date('M d, Y, h:ia', strtotime($value));
+    }
+
+    /**
      * Define accessor to format checkout attribute
      */
     public function getCheckoutAttribute($value)
@@ -89,6 +97,14 @@ class Booking extends Model
         if($value != null) {
             return date('M d, Y, h:ia', strtotime($value));
         }
+    }
+
+    /**
+     * Define accessor to format actual_checkout attribute
+     */
+    public function getActualCheckoutAttribute($value)
+    {
+        return date('M d, Y, h:ia', strtotime($value));
     }
 
     /**

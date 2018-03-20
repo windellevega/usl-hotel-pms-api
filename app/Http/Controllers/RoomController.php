@@ -197,6 +197,7 @@ class RoomController extends Controller
                 return 0;
             }
             $booking->bookingstatus = 1;
+            $booking->actual_checkin = Carbon::now();
             $booking->save();
         }
         else if($request->statusid == 4 || $request->statusid == 5 || $request->statusid == 8) {
