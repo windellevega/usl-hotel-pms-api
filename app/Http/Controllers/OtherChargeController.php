@@ -53,7 +53,7 @@ class OtherChargeController extends Controller
                         ->where('billing_id', $request->billingid)
                         ->first();
 
-        if($othercharge->count() != 0) {
+        if($othercharge) {
             $othercharge->quantity += $request->quantity;
         }
         else {

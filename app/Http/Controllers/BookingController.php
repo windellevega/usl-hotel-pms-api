@@ -391,7 +391,8 @@ class BookingController extends Controller
     }
 
     public function generateInvoice() {
-        $pdf = PDF::loadView('invoice');
-        return $pdf->stream('invoice.pdf', array("Attachment" => 0));
+        $pdf = PDF::loadView('invoice')
+                ->setPaper(array(0,0,612,936), 'portrait');
+        return $pdf->stream('invoice.pdf');
     }
 }

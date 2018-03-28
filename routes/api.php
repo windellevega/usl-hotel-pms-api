@@ -17,6 +17,13 @@ Route::get('/invoice', [
     'as' => 'invoice-generate',
     'uses' => 'BookingController@generateInvoice'
 ]);
+/**
+     * Add new instance of other charge
+     */
+    Route::post('/othercharge', [
+        'as' => 'othercharge-add',
+        'uses' => 'OtherChargeController@store'
+    ]);
 
 Route::middleware('auth:api')->group(function() {
     /**
@@ -292,13 +299,7 @@ Route::middleware('auth:api')->group(function() {
      * --------------------------------
      */
 
-    /**
-     * Add new instance of other charge
-     */
-    Route::post('/othercharge', [
-        'as' => 'othercharge-add',
-        'uses' => 'OtherChargeController@store'
-    ]);
+    
 
     /**
      * Delete instance of ther charge
