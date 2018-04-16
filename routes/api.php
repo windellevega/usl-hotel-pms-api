@@ -13,6 +13,15 @@ use Illuminate\Http\Request;
 |
 */
 
+/**
+ * Generate pdf file for invoice
+ * @param: id - room_id
+ */
+Route::get('/invoice/{id}', [
+    'as' => 'invoice-generate',
+    'uses' => 'BookingController@generateInvoice'
+]);
+
 Route::middleware('auth:api')->group(function() {
     /**
      * -------------------------
@@ -319,10 +328,6 @@ Route::middleware('auth:api')->group(function() {
      * ROUTES FOR BILLING METHODS
      * -----------------------------
      */
-    Route::get('/invoice/{id}', [
-        'as' => 'invoice-generate',
-        'uses' => 'BookingController@generateInvoice'
-    ]);
 
 
     /**
