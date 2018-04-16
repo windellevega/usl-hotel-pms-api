@@ -13,18 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/invoice', [
-    'as' => 'invoice-generate',
-    'uses' => 'BookingController@generateInvoice'
-]);
-/**
-     * Add new instance of other charge
-     */
-    Route::post('/othercharge', [
-        'as' => 'othercharge-add',
-        'uses' => 'OtherChargeController@store'
-    ]);
-
 Route::middleware('auth:api')->group(function() {
     /**
      * -------------------------
@@ -299,7 +287,13 @@ Route::middleware('auth:api')->group(function() {
      * --------------------------------
      */
 
-    
+    /**
+     * Add new instance of other charge
+     */
+    Route::post('/othercharge', [
+        'as' => 'othercharge-add',
+        'uses' => 'OtherChargeController@store'
+    ]);
 
     /**
      * Delete instance of ther charge
@@ -318,6 +312,18 @@ Route::middleware('auth:api')->group(function() {
         'as' => 'othercharges-show',
         'uses' => 'OtherChargeController@show'
     ]);
+
+
+    /**
+     * -----------------------------
+     * ROUTES FOR BILLING METHODS
+     * -----------------------------
+     */
+    Route::get('/invoice/{id}', [
+        'as' => 'invoice-generate',
+        'uses' => 'BookingController@generateInvoice'
+    ]);
+
 
     /**
      * ------------------------

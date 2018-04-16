@@ -13,6 +13,7 @@ use App\BookingType;
 use App\Billing;
 use App\Room;
 use App\StatusHistory;
+use App\User;
 
 class BookingController extends Controller
 {
@@ -390,8 +391,25 @@ class BookingController extends Controller
         ]);
     }
 
-    public function generateInvoice() {
-        $pdf = PDF::loadView('invoice')
+    public function generateInvoice($roomid) {
+        $booking = Booking::where('room_id', $roomid)
+                    ->where('bookingstatus', 1)
+                    ->first();
+        
+        $booking->load('BookingType');
+        $booking->load('Room');
+        $booking->load('Billing');
+        $booking->load('Billing.OtherCharge');
+        $booking->load('Guest.GuestType', 'Guest.Company');
+        $booking->load('User');
+
+        if($booking->count() == 0) {
+            return response()->json([
+                'message' => "This booking doesn't exist"
+            ]);
+        }
+
+        $pdf = PDF::loadView('invoice', compact('booking'))
                 ->setPaper(array(0,0,612,936), 'portrait');
         return $pdf->stream('invoice.pdf');
     }
