@@ -61,6 +61,26 @@ class BookingController extends Controller
         return response()->json($reservations);
     }
 
+    public function getTransactions()
+    {
+        $transactions = Booking::where('bookingstatus', 3)
+                            ->orderBy('room_id')
+                            ->orderBy('checkin')
+                            ->get();
+        $transactions->load('Room');
+        $transactions->load('Guest.GuestType', 'Guest.Company');
+        $transactions->load('BookingType');
+        $transactions->load('User');
+        $transactions->load('Billing');
+
+        if($transactions->count() <= 0) {
+            return response()->json([
+                'message' => 'There are no transactions to show.'
+            ]);
+        }
+        return response()->json($transactions);
+    }
+
     public function getBookingTypes()
     {
         $booktype = BookingType::select('id as value', 'bookingtype as text')->get();
@@ -191,6 +211,63 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'Reservation added successfully.'
+        ]);
+
+    }
+
+    public function recordTransaction(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'guest_id' => 'required',
+            'checkindate' => 'required',
+            'checkintime' => 'required',
+            'checkoutdate' => 'required',
+            'checkouttime' => 'required',
+            'room_id' => 'required',
+            'bookingtype_id' => 'required',
+            'numberofpax' => 'required | numeric',
+            'bookingcharge' => 'numeric',
+            'billing.downpayment' => 'numeric'
+        ],
+        [
+            'guest_id.required' => 'The guest name field is required.',
+            'room_id.required' => 'The room information field is required.',
+            'bookingtype_id.required' => 'The booking type field is required.'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors()->all());
+        }
+
+        //return response()->json($request);
+        $transaction = new Booking();
+
+        $transaction->checkin = $request->checkindate . ' ' . $request->checkintime;
+        $transaction->actual_checkin = $request->checkindate . ' ' . $request->checkintime;
+        $transaction->checkout = $request->checkoutdate . ' ' . $request->checkouttime;
+        $transaction->actual_checkout = $request->checkoutdate . ' ' . $request->checkouttime;
+        $transaction->numberofpax = $request->numberofpax;
+        $transaction->remarks = $request->remarks;
+        $transaction->reservationstatus = 1; //0 - for approval, 1 - approved, 2 - disapproved
+        $transaction->reservationdate = $request->reservationdate;
+        $transaction->guest_id = $request->guest_id;
+        $transaction->room_id = $request->room_id;
+        $transaction->booked_by = 1;
+        $transaction->bookingtype_id = $request->bookingtype_id;
+        $transaction->bookingcharge = $request->bookingcharge;
+        $transaction->bookingstatus = 3; //0 - reserved, 1 - booked, 2 - checked out
+
+        $transaction->save();
+
+        $billing = new Billing();
+        $billing->booking_id = $transaction->id;
+        $billing->downpayment = $request['billing']['downpayment'];
+        $billing->totalcharges = $request['billing']['totalcharges'];
+
+        $billing->save();
+
+        return response()->json([
+            'message' => 'Transaction added successfully.'
         ]);
 
     }

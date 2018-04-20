@@ -22,6 +22,19 @@ Route::get('/invoice/{id}', [
     'uses' => 'BookingController@generateInvoice'
 ]);
 
+/**
+ * Get all transactions
+ */
+Route::get('/transactions', [
+    'as' => 'transactions-list',
+    'uses' => 'BookingController@getTransactions'
+]);
+
+Route::post('/transaction', [
+    'as' => 'transactions-record',
+    'uses' => 'BookingController@recordTransaction'
+]);
+
 Route::middleware('auth:api')->group(function() {
     /**
      * -------------------------
