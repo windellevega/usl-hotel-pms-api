@@ -44,6 +44,7 @@ class BookingController extends Controller
     public function getReservations()
     {
         $reservations = Booking::whereNotNull('reservationdate')
+                            ->where('reservationstatus', 0)
                             ->orderBy('checkin')
                             ->get();
         $reservations->load('Room');
